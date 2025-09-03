@@ -52,3 +52,28 @@ model = df[df['Range_km'] == max]['Model'].values[0]
 make = df[df['Range_km'] == max]['Make'].values[0]
 # Filtering for the max and the Make column produces a Series, so we use .values[0] to get the actual string value.
 print(f'Max Range: {max} km from {make} {model}')
+
+fig, ax = plt.subplots(figsize=(14, 8))
+plt.scatter(df['Battery_Capacity_kWh'], df['Charging_Time_hr'], color='skyblue')
+plt.xlabel('Battery Capacity (kWh)')
+plt.ylabel('Charging Time (hrs)')
+plt.title('Battery Capacity vs Charging Time')
+
+plt.show()
+
+fig, ax = plt.subplots(figsize=(14,8))
+# We want to filter the y-axis to a mean for each make
+mean_charging_time = df.groupby('Make')['Charging_Time_hr'].mean().reset_index()
+'''
+Step by step, this code groups the DataFrame by 'Make', calculates the mean of 'Charging_Time_hr' for each group, and then resets the index to turn the result back into a DataFrame.
+The result is a new DataFrame with two columns: 'Make' and the mean 'Charging_Time_hr'.
+This DataFrame can then be used for plotting.
+reset_index() is used to convert the Series back into a DataFrame from the groupby operation.
+Groupby creates a Series with 'Make' as the index and the mean 'Charging_Time_hr' as values. reset_index() makes 'Make' a column again.
+'''
+plt.bar(mean_charging_time['Make'], mean_charging_time['Charging_Time_hr'], color='green', width = 0.5)
+plt.ylim(1.05, 1.35)
+plt.xlabel("Make")
+plt.ylabel("Electriity Cost per KWh")
+plt.title("Make vs Cost of Electricity")
+plt.show()
