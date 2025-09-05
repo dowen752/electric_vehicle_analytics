@@ -1,6 +1,9 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 import os
+import seaborn as sns
+import numpy as np
+from scipy.stats import gaussian_kde
 
 
 # numbersX = [1, 2, 3, 4, 5]
@@ -39,7 +42,7 @@ plt.show()
 
 
 fig, ax = plt.subplots(figsize=(14, 8))
-plt.bar(df['Make'], df['Range_km'] , color='skyblue', width=0.4, align='center')
+plt.bar(df['Make'], df['Range_km'] , color='red', width=0.4, align='center')
 plt.xlabel('Make')
 plt.ylabel('Range (km)')
 plt.title('Electric Vehicle Range by Make')
@@ -54,7 +57,7 @@ make = df[df['Range_km'] == max]['Make'].values[0]
 print(f'Max Range: {max} km from {make} {model}')
 
 fig, ax = plt.subplots(figsize=(14, 8))
-plt.scatter(df['Battery_Capacity_kWh'], df['Charging_Time_hr'], color='skyblue')
+plt.scatter(df['Battery_Capacity_kWh'], df['Charging_Time_hr'], color='grey')
 plt.xlabel('Battery Capacity (kWh)')
 plt.ylabel('Charging Time (hrs)')
 plt.title('Battery Capacity vs Charging Time')
@@ -77,3 +80,42 @@ plt.xlabel("Make")
 plt.ylabel("Electriity Cost per KWh")
 plt.title("Make vs Cost of Electricity")
 plt.show()
+
+mean_maintenance_cost = df.groupby('Make')["Maintenance_Cost_USD"].mean().reset_index()
+fig, ax = plt.subplots(figsize=(14,8))
+plt.bar(mean_maintenance_cost['Make'], mean_maintenance_cost['Maintenance_Cost_USD'], color='purple', width = 0.5)
+plt.ylim(1000, 1200)
+plt.xlabel("Make")
+plt.ylabel("Maintenance Cost (USD)")
+plt.title("Make vs Maintenance Cost")
+plt.show()
+
+# Finding total cost of each vehicle for an owner over a 5 year period
+# Combinatin of maintenance cost, monthly charging costs, and insurance cost, contrasting with resale value
+df['Total_Cost_5_Years_USD'] = df['Resale_Value_USD'] - df['Maintenance_Cost_USD'] - (df['Insurance_Cost_USD'] * 12 * 5) - (df['Monthly_Charging_Cost_USD'] * 12 * 5)
+
+make_map = {make: i for i, make in enumerate(df['Make'].unique())}
+df['Make_Num'] = df['Make'].map(make_map)
+
+# Calculate density
+xy = np.vstack([df['Make_Num'], df['Total_Cost_5_Years_USD']])
+z = gaussian_kde(xy)(xy)
+
+plt.figure(figsize=(14,8))
+plt.scatter(df['Make_Num'], df['Total_Cost_5_Years_USD'], c=z, cmap='plasma')
+plt.colorbar(label='Density')
+plt.xticks(list(make_map.values()), list(make_map.keys()), rotation=45)
+plt.xlabel("Make")
+plt.ylabel("Total Cost Over 5 Years (USD)")
+plt.title("Make vs Total Cost Over 5 Years (Density Scatter)")
+plt.show()
+
+'''
+We find that the costs of owning and operating a car over the span of just 
+5 years hugely outweigh the resale value of the car in these cases.
+This is likely due to the high initial purchase price of electric vehicles,
+coupled with the relatively high costs of maintenance, insurance, and charging over time.
+The resale value, while significant, does not come close to offsetting these ongoing expenses.
+This suggests that electric vehicles may not be as cost-effective as they initially appear,
+especially when considering the total cost of ownership over a typical usage period like 5 years.
+'''
