@@ -97,7 +97,8 @@ df['Total_Cost_5_Years_USD'] = df['Resale_Value_USD'] - df['Maintenance_Cost_USD
 make_map = {make: i for i, make in enumerate(df['Make'].unique())}
 df['Make_Num'] = df['Make'].map(make_map)
 
-# Calculate density
+# Calculate density by using gaussian_kde, which takes in a 2D array 
+# where each row is a variable and each column is an observation.
 xy = np.vstack([df['Make_Num'], df['Total_Cost_5_Years_USD']])
 z = gaussian_kde(xy)(xy)
 
@@ -118,4 +119,24 @@ coupled with the relatively high costs of maintenance, insurance, and charging o
 The resale value, while significant, does not come close to offsetting these ongoing expenses.
 This suggests that electric vehicles may not be as cost-effective as they initially appear,
 especially when considering the total cost of ownership over a typical usage period like 5 years.
+'''
+
+plt.figure(figsize=(14,8))
+sns.boxplot(x=df['Make'], y = df['Total_Cost_5_Years_USD'], palette="Set3")
+plt.xlabel("Make")
+plt.ylabel("Total Cost Over 5 Years (USD)")
+plt.title("Make vs Total Cost Over 5 Years (Box Plot)")
+plt.ylim(-225000, 0)
+plt.show()
+
+'''
+Based on the box plot, we can see that most vehicles have a total cost over 5 years
+that is negative, indicating that the costs of ownership outweigh the resale value.
+There are some outliers, particularly in the Tesla and Porsche models, which have a 
+higher total cost over 5 years, but these are exceptions rather than thenorm. Overall, the 
+data suggests that electric vehicles may not be as cost-effective as they initially appear 
+when considering the total cost of ownership over a 5-year period. If purchasing an electric 
+vehicle, your best option is likely to go with a Nissan or Hyundai, as they have the lowest 
+total cost over 5 years on average. However, they still have a negative total cost, so it's 
+important to consider whether the benefits of owning an electric vehicle outweigh the financial costs.
 '''
