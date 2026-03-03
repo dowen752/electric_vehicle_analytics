@@ -140,3 +140,11 @@ vehicle, your best option is likely to go with a Nissan or Hyundai, as they have
 total cost over 5 years on average. However, they still have a negative total cost, so it's 
 important to consider whether the benefits of owning an electric vehicle outweigh the financial costs.
 '''
+
+
+numeric_ev_data_corr = df.select_dtypes(["int64", "float64"]).corr()
+    
+plt.figure(figsize = (10, 8))
+sns.heatmap(data=numeric_ev_data_corr)
+plt.tight_layout()
+plt.show()
