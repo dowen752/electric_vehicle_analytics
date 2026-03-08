@@ -32,22 +32,23 @@ print(df.head())
 
 # Make sure to add spacing between each x label
 
-fig, ax = plt.subplots(figsize=(14, 8))
-plt.bar(df['Make'], df['Battery_Capacity_kWh'] , color='skyblue', width=0.4, align='center')
-plt.xlabel('Make')
-plt.ylabel('Battery Capacity (kWh)')
-plt.title('Electric Vehicle Battery Capacity by Make')
+# fig, ax = plt.subplots(figsize=(14, 8))
+# plt.bar(df['Make'], df['Battery_Capacity_kWh'] , color='skyblue', width=0.4, align='center')
+# plt.xlabel('Make')
+# plt.ylabel('Battery Capacity (kWh)')
+# plt.title('Electric Vehicle Battery Capacity by Make')
 
-plt.show()
+# plt.show()
 
 
-fig, ax = plt.subplots(figsize=(14, 8))
-plt.bar(df['Make'], df['Range_km'] , color='red', width=0.4, align='center')
-plt.xlabel('Make')
-plt.ylabel('Range (km)')
-plt.title('Electric Vehicle Range by Make')
+# fig, ax = plt.subplots(figsize=(14, 8))
+# plt.bar(df['Make'], df['Range_km'] , color='red', width=0.4, align='center')
+# plt.xlabel('Make')
+# plt.ylabel('Range (km)')
+# plt.title('Electric Vehicle Range by Make')
+# plt.show()
 
-plt.show()
+
 max = df['Range_km'].max()
 model = df[df['Range_km'] == max]['Model'].values[0]
 # The line above works by filtering the DataFrame to find the row where 'Range_km' equals the maximum value, then selecting the 'Model' column from that row and extracting the value.
@@ -77,8 +78,8 @@ Groupby creates a Series with 'Make' as the index and the mean 'Charging_Time_hr
 plt.bar(mean_charging_time['Make'], mean_charging_time['Charging_Time_hr'], color='green', width = 0.5)
 plt.ylim(1.05, 1.35)
 plt.xlabel("Make")
-plt.ylabel("Electriity Cost per KWh")
-plt.title("Make vs Cost of Electricity")
+plt.ylabel("Charging Time (Hours)")
+plt.title("Make vs Charging Time (Hours)")
 plt.show()
 
 mean_maintenance_cost = df.groupby('Make')["Maintenance_Cost_USD"].mean().reset_index()
@@ -147,4 +148,5 @@ numeric_ev_data_corr = df.select_dtypes(["int64", "float64"]).corr()
 plt.figure(figsize = (10, 8))
 sns.heatmap(data=numeric_ev_data_corr)
 plt.tight_layout()
+plt.title("Heatmap of numerical variables")
 plt.show()
