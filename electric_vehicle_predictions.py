@@ -5,15 +5,20 @@ import torch.nn as nn
 from torch.utils.data import TensorDataset, DataLoader
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from features import neuralNetworkDatasets, neuralNetworkTrain
+from features import load_datasets, neuralNetworkTrain, RandomForestTrain
     
     
 
 def main():
-    neuralNetworkTrain()
-    
 
-    
+    X_train, X_val, y_train, y_val = load_datasets()
+
+    nn_rmse = neuralNetworkTrain(X_train, X_val, y_train, y_val)
+
+    rf_rmse = RandomForestTrain(X_train, X_val, y_train, y_val)
+
+    print("Neural Network RMSE:", nn_rmse)
+    print("Random Forest RMSE:", rf_rmse)
     
     
 
